@@ -1,9 +1,9 @@
 type Coordinate = number;
-enum Direction {
-  North,
-  East,
-  South,
-  West,
+export enum Direction {
+  North = "North",
+  East = "East",
+  South = "South",
+  West = "West",
 }
 
 export class Simulator {
@@ -28,6 +28,7 @@ export class Simulator {
         case 0:
           console.log(this.point);
           break;
+        // process.exit();
         case 1:
           this.stepForward();
           break;
