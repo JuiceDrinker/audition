@@ -1,108 +1,187 @@
-const width = 4;
-const height = 4;
-
+type Coordinate = number;
 enum Direction {
-  North = 1,
+  North,
   East,
   South,
   West,
 }
 
-class Point {
-  x: number;
-  y: number;
-  direction: Direction;
+export class Simulator {
+  tableWidth: number;
+  tableHeight: number;
+  point: Point;
 
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
-    // Object always faces North to start with
-    this.direction = Direction.North;
+  constructor(
+    tableWidth: number,
+    tableHeight: number,
+    initialX: Coordinate,
+    initialY: Coordinate,
+  ) {
+    this.point = new Point(initialX, initialY);
+    this.tableHeight = tableHeight;
+    this.tableWidth = tableWidth;
   }
 
-  rotateCounterClockwise() {
-    switch (this.direction) {
+  run(commands: number[]) {
+    commands.forEach((command) => {
+      switch (command) {
+        case 0:
+          console.log(this.point);
+          break;
+        case 1:
+          this.stepForward();
+          break;
+        case 2:
+          this.stepBackward();
+          break;
+        case 3:
+          this.rotateClockwise();
+          break;
+        case 4:
+          this.rotateCounterClockwise();
+          break;
+      }
+    });
+  }
+
+  public stepBackward() {
+    let newY: number;
+    let newX: number;
+    switch (this.point.direction()) {
       case Direction.North:
-        this.direction = Direction.West;
+        newY = this.point.y() + 1;
+        if (newY < 0 || newY > this.tableHeight) {
+          throw new Error("Out of bounds");
+        }
+        this.point.setY(newY);
         break;
       case Direction.East:
-        this.direction = Direction.North;
+        newX = this.point.x() - 1;
+        if (newX > this.tableWidth || newX < 0) {
+          throw new Error("Out of bounds");
+        }
+        this.point.setX(newX);
         break;
       case Direction.South:
-        this.direction = Direction.East;
+        newY = this.point.y() - 1;
+        if (newY < 0 || newY > this.tableHeight) {
+          throw new Error("Out of bounds");
+        }
+        this.point.setY(newY);
         break;
       case Direction.West:
-        this.direction = Direction.South;
+        newX = this.point.x() - 1;
+        if (newX > this.tableWidth || newX < 0) {
+          throw new Error("Out of bounds");
+        }
+        this.point.setX(newX);
         break;
     }
   }
-  rotateClockwise() {
-    switch (this.direction) {
+
+  public stepForward() {
+    let newY: number;
+    let newX: number;
+    switch (this.point.direction()) {
       case Direction.North:
-        this.direction = Direction.East;
+        newY = this.point.y() - 1;
+        if (newY < 0 || newY > this.tableHeight) {
+          throw new Error("Out of bounds");
+        }
+        this.point.setY(newY);
         break;
       case Direction.East:
-        this.direction = Direction.South;
+        newX = this.point.x() + 1;
+        if (newX > this.tableWidth || newX < 0) {
+          throw new Error("Out of bounds");
+        }
+        this.point.setX(newX);
         break;
       case Direction.South:
-        this.direction = Direction.West;
+        newY = this.point.y() + 1;
+        if (newY < 0 || newY > this.tableHeight) {
+          throw new Error("Out of bounds");
+        }
+        this.point.setY(newY);
         break;
       case Direction.West:
-        this.direction = Direction.North;
+        newX = this.point.x() - 1;
+        if (newX > this.tableWidth || newX < 0) {
+          throw new Error("Out of bounds");
+        }
+        this.point.setX(newX);
         break;
     }
   }
 
-  stepBackward() {
-    switch (this.direction) {
+  public rotateCounterClockwise() {
+    switch (this.point.direction()) {
       case Direction.North:
-        this.y += 1;
+        this.point.setDirection(Direction.West);
         break;
       case Direction.East:
-        this.x -= 1;
+        this.point.setDirection(Direction.North);
         break;
       case Direction.South:
-        this.y -= 1;
+        this.point.setDirection(Direction.East);
+        break;
       case Direction.West:
-        this.x += 1;
+        this.point.setDirection(Direction.South);
+        break;
     }
   }
-  stepForward() {
-    switch (this.direction) {
+
+  public rotateClockwise() {
+    switch (this.point.direction()) {
       case Direction.North:
-        this.y -= 1;
+        this.point.setDirection(Direction.East);
         break;
       case Direction.East:
-        this.x += 1;
+        this.point.setDirection(Direction.South);
         break;
       case Direction.South:
-        this.y += 1;
+        this.point.setDirection(Direction.West);
+        break;
       case Direction.West:
-        this.x -= 1;
+        this.point.setDirection(Direction.North);
+        break;
     }
   }
 }
 
-let p = new Point(2, 2);
+class Point {
+  private _x: Coordinate;
+  private _y: Coordinate;
+  private _direction: Direction;
 
-const commands = [1, 4, 1, 3, 2, 3, 2, 4, 1, 0];
-
-commands.forEach((command) => {
-  switch (command) {
-    case 0:
-      console.log(p);
-      process.exit();
-    case 1:
-      p.stepForward();
-      break;
-    case 2:
-      p.stepBackward();
-      break;
-    case 3:
-      p.rotateClockwise();
-      break;
-    case 4:
-      p.rotateCounterClockwise();
-      break;
+  public constructor(x: number, y: number) {
+    this._x = x;
+    this._y = y;
+    // Point always starts facing north
+    this._direction = Direction.North;
   }
-});
+
+  public x(): Coordinate {
+    return this._x;
+  }
+
+  public y(): Coordinate {
+    return this._y;
+  }
+
+  public direction(): Direction {
+    return this._direction;
+  }
+
+  public setY(y: number) {
+    this._y = y;
+  }
+
+  public setX(x: number) {
+    this._x = x;
+  }
+
+  public setDirection(direction: Direction) {
+    this._direction = direction;
+  }
+}
