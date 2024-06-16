@@ -3,7 +3,22 @@ import yargs from "yargs";
 import { Simulator } from "./simulator.js";
 
 async function main() {
-  const args = await yargs(process.argv.slice(2))
+  const { width, height, initialX, initialY, commands } =
+    await getSimulatorParams();
+
+  let simulator = new Simulator(width, height, initialX, initialY);
+
+  try {
+    simulator.run(commands);
+  } catch (e) {
+    if (e.message == "Out of bounds") {
+      console.error("Fell off the table...");
+    }
+  }
+}
+
+const getSimulatorParams = async () =>
+  await yargs(process.argv.slice(2))
     .option("width", {
       alias: "w",
       describe: "Width of simulated table",
@@ -66,11 +81,5 @@ async function main() {
         commands.map((command) => parseInt(command)),
     })
     .parse();
-
-  const { width, height, initialX, initialY, commands } = args;
-  let simulator = new Simulator(width, height, initialX, initialY);
-
-  simulator.run(commands);
-}
 
 main();

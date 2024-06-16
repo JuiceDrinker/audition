@@ -17,12 +17,17 @@ export class Simulator {
   }
 
   run(commands: number[]) {
-    commands.forEach((command) => {
+    for (const command of commands) {
+      console.log(
+        "Currently at - x: %d, y: %d. Facing %s",
+        this.point.x(),
+        this.point.y(),
+        this.point.direction(),
+      );
       switch (command) {
         case 0:
           console.log(this.point);
           return;
-          break;
         case 1:
           this.stepForward();
           break;
@@ -36,7 +41,7 @@ export class Simulator {
           this.rotateCounterClockwise();
           break;
       }
-    });
+    }
   }
 
   public stepBackward() {
@@ -72,6 +77,8 @@ export class Simulator {
         this.point.setX(newX);
         break;
     }
+
+    console.info("Stepping backward...");
   }
 
   public stepForward() {
@@ -107,6 +114,7 @@ export class Simulator {
         this.point.setX(newX);
         break;
     }
+    console.info("Stepping forward...");
   }
 
   public rotateCounterClockwise() {
@@ -124,6 +132,7 @@ export class Simulator {
         this.point.setDirection(Direction.South);
         break;
     }
+    console.info("Rotating counter-clockwise");
   }
 
   public rotateClockwise() {
@@ -141,5 +150,6 @@ export class Simulator {
         this.point.setDirection(Direction.North);
         break;
     }
+    console.info("Rotating clockwise");
   }
 }
