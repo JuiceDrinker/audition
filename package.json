@@ -27,6 +27,7 @@
   "jest": {
     "roots": [
       "dist/"
-    ]
+    ],
+   "collectCoverage": true
   }
 }

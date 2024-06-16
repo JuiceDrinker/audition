@@ -1,3 +1,4 @@
+import { createOutOfBoundsError } from "./error.js";
 import { Coordinate, Direction, Point } from "./point.js";
 
 export class Simulator {
@@ -26,8 +27,7 @@ export class Simulator {
       );
       switch (command) {
         case 0:
-          console.log(this.point);
-          return;
+          return console.log("[%d, %d]", this.point.x(), this.point.y());
         case 1:
           this.stepForward();
           break;
@@ -51,28 +51,28 @@ export class Simulator {
       case Direction.North:
         newY = this.point.y() + 1;
         if (newY < 0 || newY > this.tableHeight) {
-          throw new Error("Out of bounds");
+          throw createOutOfBoundsError();
         }
         this.point.setY(newY);
         break;
       case Direction.East:
         newX = this.point.x() - 1;
         if (newX > this.tableWidth || newX < 0) {
-          throw new Error("Out of bounds");
+          throw createOutOfBoundsError();
         }
         this.point.setX(newX);
         break;
       case Direction.South:
         newY = this.point.y() - 1;
         if (newY < 0 || newY > this.tableHeight) {
-          throw new Error("Out of bounds");
+          throw createOutOfBoundsError();
         }
         this.point.setY(newY);
         break;
       case Direction.West:
         newX = this.point.x() - 1;
         if (newX > this.tableWidth || newX < 0) {
-          throw new Error("Out of bounds");
+          throw createOutOfBoundsError();
         }
         this.point.setX(newX);
         break;
@@ -88,28 +88,28 @@ export class Simulator {
       case Direction.North:
         newY = this.point.y() - 1;
         if (newY < 0 || newY > this.tableHeight) {
-          throw new Error("Out of bounds");
+          throw createOutOfBoundsError();
         }
         this.point.setY(newY);
         break;
       case Direction.East:
         newX = this.point.x() + 1;
         if (newX > this.tableWidth || newX < 0) {
-          throw new Error("Out of bounds");
+          throw createOutOfBoundsError();
         }
         this.point.setX(newX);
         break;
       case Direction.South:
         newY = this.point.y() + 1;
         if (newY < 0 || newY > this.tableHeight) {
-          throw new Error("Out of bounds");
+          throw createOutOfBoundsError();
         }
         this.point.setY(newY);
         break;
       case Direction.West:
         newX = this.point.x() - 1;
         if (newX > this.tableWidth || newX < 0) {
-          throw new Error("Out of bounds");
+          throw createOutOfBoundsError();
         }
         this.point.setX(newX);
         break;
